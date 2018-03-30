@@ -5,10 +5,14 @@ package matchings
  */
 model UniformPermutation {
   random Permutation permutation 
+  param Simplex probabilities
+  random IntVar a
   
   laws {
+  	
+  	a ~ Categorical(probabilities)
     logf(permutation) {
-      - logFactorial(permutation.componentSize)
+      - logFactorial(permutation.componentSize)*permutation.getConnections().get(0)
     }
   }
   generate(rand) {
