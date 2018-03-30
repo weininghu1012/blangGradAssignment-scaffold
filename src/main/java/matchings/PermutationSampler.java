@@ -68,12 +68,21 @@ System.out.println("Current -------------------------------------");
 	  if (alpha >= u) {
 		 // permutation.setConnections(permutation.getConnection);
 		  for (int i = 0; i < newConnections.size(); i ++ ) {
-			  deepCurrentConnections.set(i, newConnections.get(i));
+			  permutation.getConnections().set(i, newConnections.get(i));
 			
 		  }
-		  System.out.println("The new sampled one is");
+		  System.out.println("We decide to pick the new one");
 		  System.out.println(permutation.getConnections());
+	  } else {
+		  for (int i = 0; i < deepCurrentConnections.size(); i ++ ) {
+			  permutation.getConnections().set(i, deepCurrentConnections.get(i));
+			
+		  }
+		  System.out.println("We decide to stick with the old one");
+		  System.out.println(permutation.getConnections());
+		  
 	  }
+
 	  
 	  
 	    
