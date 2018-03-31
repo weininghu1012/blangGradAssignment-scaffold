@@ -3,19 +3,47 @@ package matchings
 import matchings.Permutation
 
 model PermutedClustering {
-  param Integer nGroups
-  param Integer groupSize
+  param Integer nGroups // 20
+  param Integer groupSize // 5
   random List<RealVar> means ?: latentRealList(groupSize)
   random List<RealVar> variances ?: latentRealList(groupSize)
+  
   random List<Permutation> permutations ?: {
     val result = new ArrayList
     for (group : 0 ..< nGroups) 
       result.add(new Permutation(groupSize))
     return result
   }
+  
+ 
   random Matrix observations ?: latentMatrix(nGroups, groupSize)
   
   laws {
-    // Fill this. 
-  }
+    // fill for the variance
+    variances.get(0) ~ Exponential(10)
+    means.get(0) ~ ContinuousUniform(0,1)
+    for (int curGroup : 1 ..< groupSize) {
+    	variances.get(curGroup) ~ Exponential(10)
+    	means.get(curGroup) | RealVar previous = means.get(curGroup -1) ~ ContinuousUniform(previous, previous + 1)
+    }
+    
+    
+    for (Permutation permutation: permutations) {
+    	permutation ~ UniformPermutation
+    }
+    
+    for (int curGame: 0 ..< nGroups) {
+   	for (int curPlayer: 0 ..< groupSize ) {
+   		observations.get(curGame, curPlayer) | 
+   		means, variances,
+   		IntVar curIndic = permutations.get(curGame).getConnections().get(curPlayer)
+   		~ Normal(
+   			means.get(curIndic),
+   			variances.get(curIndic)
+   			)
+   		
+   	}
+   }
+   }
 }
+
