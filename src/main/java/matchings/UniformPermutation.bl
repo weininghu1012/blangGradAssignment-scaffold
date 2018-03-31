@@ -9,7 +9,7 @@ model UniformPermutation {
   laws {
   	
     logf(permutation) {
-      - logFactorial(permutation.componentSize)*permutation.getConnections().get(0);
+      - logFactorial(permutation.componentSize);
     }
   }
   generate(rand) {
