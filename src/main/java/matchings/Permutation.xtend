@@ -2,6 +2,7 @@ package matchings
 
 import org.eclipse.xtend.lib.annotations.Data
 import blang.mcmc.Samplers
+//import bayonet.distributions.Random;
 import java.util.Random
 import static java.util.Collections.sort
 import static java.util.Collections.shuffle
@@ -22,10 +23,18 @@ import static java.util.Collections.shuffle
   /**
    * Sample an independent uniform permutation in place.
    */
+
   def void sampleUniform(Random random) { 
     sort(connections) // sort first to make independent from the current config. 
     shuffle(connections, random)
   }
+  
+  // non-uniform
+//  def void sampleNonUniform(Random random) {
+//  	sort(connections)
+//  	shuffle(connections, random.)
+//  	
+//  }
   
 
 }

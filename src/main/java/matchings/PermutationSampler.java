@@ -43,6 +43,7 @@ permutation.getConnections();
 //	  long n = (long)rand.nextCategorical(probabilities) + 1;
 //	  Random curRandom = new Random(n);
 //	  permutation.sampleUniform(curRandom);
+System.out.println("New Iteration -----------------------");
 System.out.println("Current -------------------------------------");
       List<Integer> currentConnections = permutation.getConnections();
       System.out.println(currentConnections);
@@ -82,11 +83,7 @@ System.out.println("Current -------------------------------------");
 		  System.out.println(permutation.getConnections());
 		  
 	  }
-
-	  
-	  
-	    
-	  
+	   	  
   }
   
   private double logDensity() {
