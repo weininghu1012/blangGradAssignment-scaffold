@@ -29,12 +29,7 @@ import static java.util.Collections.shuffle
     shuffle(connections, random)
   }
   
-  // non-uniform
-//  def void sampleNonUniform(Random random) {
-//  	sort(connections)
-//  	shuffle(connections, random.)
-//  	
-//  }
+
   
 
 }

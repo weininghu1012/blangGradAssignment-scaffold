@@ -1,6 +1,7 @@
 package matchings;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import bayonet.distributions.Multinomial;
@@ -27,29 +28,48 @@ public class BipartiteMatchingSampler implements Sampler {
    * resampled. 
    */
   @ConnectedFactor List<LogScaleFactor> numericFactors;
+  long startTime = System.nanoTime();
+  List<Integer> currentConnections;
+
+  double currentDensity;
+  double newDensity;
+  double alpha;
+  double u;
+  int firstIndex;
+  int secondIndex;
 
   @Override
   public void execute(Random rand) {
-	  matching.getConnections();
-      List<Integer> currentConnections = matching.getConnections();
+      long startTime1 = System.nanoTime();
+      currentConnections = matching.getConnections();
       ArrayList<Integer> deepCurrentConnections = new ArrayList<Integer>(currentConnections);
-      double currentDensity = logDensity();
-      matching.sampleUniform(rand);
-      List<Integer> newConnections = matching.getConnections();
+     
+      currentDensity = logDensity();
       
-	  double newDensity = logDensity();
-	  double alpha = Math.min(1, Math.exp(newDensity)/Math.exp(currentDensity));
-	  double u = Math.random();
-	  if (alpha >= u) {
-		  for (int i = 0; i < newConnections.size(); i ++ ) {
-			  matching.getConnections().set(i, newConnections.get(i));
-			}
-	  } else {
-		  for (int i = 0; i < deepCurrentConnections.size(); i ++ ) {
+      //permutation.sampleUniform(rand);
+      firstIndex = Generators.distinctPair(rand, currentConnections.size()).getFirst();
+      secondIndex = Generators.distinctPair(rand, currentConnections.size()).getSecond();
+      
+      Collections.swap(matching.getConnections(), firstIndex, secondIndex);
+
+	  newDensity = logDensity();
+	  alpha = Math.min(1, Math.exp(newDensity)/Math.exp(currentDensity));
+	  u = Math.random();
+	  long startTime2 = System.nanoTime();
+	  if (alpha < u) {
+		  for (int i = 0; i < currentConnections.size(); i ++ ) {
 			  matching.getConnections().set(i, deepCurrentConnections.get(i));
 			
-		  }		  
+		  }	
+
+
+		 
 	  }
+	  long endTime = System.nanoTime();
+	  long totalTime1 = endTime - startTime2;
+	  long totalTime2 = endTime - startTime1;
+	  System.out.println("The running time of sampling is" + Long.toString(totalTime1));
+	  System.out.println("The total running time is" + Long.toString(totalTime2));
   }
   
   private double logDensity() {

@@ -29,28 +29,38 @@ public class PermutationSampler implements Sampler {
    * resampled. 
    */
   @ConnectedFactor List<LogScaleFactor> numericFactors;
+  
+
+  List<Integer> currentConnections;
+
+  double currentDensity;
+  double newDensity;
+  double alpha;
+  double u;
+  int firstIndex;
+  int secondIndex;
 
   @Override
   public void execute(Random rand) {
-	  permutation.getConnections();
-      List<Integer> currentConnections = permutation.getConnections();
+      currentConnections = permutation.getConnections();
       ArrayList<Integer> deepCurrentConnections = new ArrayList<Integer>(currentConnections);
-      double currentDensity = logDensity();
-      permutation.sampleUniform(rand);
-      List<Integer> newConnections = permutation.getConnections();
+     
+      currentDensity = logDensity();
       
-	  double newDensity = logDensity();
-	  double alpha = Math.min(1, Math.exp(newDensity)/Math.exp(currentDensity));
-	  double u = Math.random();
-	  if (alpha >= u) {
-		  for (int i = 0; i < newConnections.size(); i ++ ) {
-			  permutation.getConnections().set(i, newConnections.get(i));
-			}
-	  } else {
-		  for (int i = 0; i < deepCurrentConnections.size(); i ++ ) {
+      //permutation.sampleUniform(rand);
+      firstIndex = Generators.distinctPair(rand, currentConnections.size()).getFirst();
+      secondIndex = Generators.distinctPair(rand, currentConnections.size()).getSecond();
+      
+      Collections.swap(permutation.getConnections(), firstIndex, secondIndex);
+
+	  newDensity = logDensity();
+	  alpha = Math.min(1, Math.exp(newDensity)/Math.exp(currentDensity));
+	  u = Math.random();
+	  if (alpha < u) {
+		  for (int i = 0; i < currentConnections.size(); i ++ ) {
 			  permutation.getConnections().set(i, deepCurrentConnections.get(i));
 			
-		  }		  
+		  }	
 	  }
 }
   
@@ -60,4 +70,6 @@ public class PermutationSampler implements Sampler {
       sum += f.logDensity();
     return sum;
   }
+  
+
 }
