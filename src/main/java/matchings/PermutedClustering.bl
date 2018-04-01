@@ -34,7 +34,7 @@ model PermutedClustering {
     
     for (int curGame: 0 ..< nGroups) {
    	for (int curPlayer: 0 ..< groupSize ) {
-   		observations.get(curGame, curPlayer) | 
+   		observations.getRealVar(curGame, curPlayer) | 
    		means, variances,
    		IntVar curIndic = permutations.get(curGame).getConnections().get(curPlayer)
    		~ Normal(
