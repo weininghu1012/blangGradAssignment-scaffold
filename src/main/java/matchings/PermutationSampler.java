@@ -43,23 +43,13 @@ public class PermutationSampler implements Sampler {
   int chooseSize;
 
   @Override
-  public void execute(Random rand) {
-	  Arrays.fill(sizeProbabilities, 1/permutation.getConnections().size());
-	  chooseSize = Generators.categorical(rand, sizeProbabilities);
-	  
-	  
-	  
+  public void execute(Random rand) {	  
       currentConnections = permutation.getConnections();
-      Collections.sort(currentConnections);
       ArrayList<Integer> deepCurrentConnections = new ArrayList<Integer>(currentConnections);
      
       currentDensity = logDensity();
       
-      //permutation.sampleUniform(rand);
-      firstIndex = Generators.distinctPair(rand, currentConnections.size()).getFirst();
-      secondIndex = Generators.distinctPair(rand, currentConnections.size()).getSecond();
-      
-      Collections.swap(permutation.getConnections(), firstIndex, secondIndex);
+      permutation.sampleUniform(rand);
 
 	  newDensity = logDensity();
 	  alpha = Math.min(1, Math.exp(newDensity)/Math.exp(currentDensity));
